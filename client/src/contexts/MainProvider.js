@@ -16,10 +16,9 @@ export function MainProvider({ children }) {
 
     
 
-  function createSession() {
+  function createSession(codeName) {
     const newSessionId = uuidv4();
     const newUserId = uuidv4();
-    const codeName = "John Wick";
 
     var date = new Date();
 
@@ -30,7 +29,7 @@ export function MainProvider({ children }) {
         date.setTime(date.getTime() + 1 * 24 * 60 * 60 * 1000);
         localStorage.setItem(
           "Data",
-          JSON.stringify({ newSessionId, newUserId, date: date.getTime() })
+          JSON.stringify({ newSessionId, newUserId,codeName, date: date.getTime() })
         );
       }
 
@@ -38,7 +37,7 @@ export function MainProvider({ children }) {
       date.setTime(date.getTime() + 1 * 24 * 60 * 60 * 1000);
       localStorage.setItem(
         "Data",
-        JSON.stringify({ newSessionId, newUserId, date: date.getTime() })
+        JSON.stringify({ newSessionId, newUserId,codeName, date: date.getTime() })
       );
     }
 
