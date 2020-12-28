@@ -38,7 +38,8 @@ export default function Homepage() {
           </div>
         </form>
       </Rodal>
-      <button onClick={() => showModal(true)}>Create Session</button>
+      {/* <button onClick={() => showModal(true)}>Create Session</button> */}
+      <button onClick={createSession.bind(this, "christopherenok@gmail.com")}>Create Session</button>
       <button>Join Session</button>
     </div>
   );

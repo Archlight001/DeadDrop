@@ -1,8 +1,13 @@
 const express = require("express");
 const http = require("http");
 const app = express();
+const cors = require("cors");
+const bodyParser = require("body-parser");
 const server = http.createServer(app);
 const { addSession } = require("./helpers/dbOps");
+const { addUser } = require("./helpers/users");
+
+const sessionRoutes = require("./routes/session");
 
 const io = require("socket.io")(server, {
   cors: {
@@ -11,30 +16,31 @@ const io = require("socket.io")(server, {
   },
 });
 
-const cors = require("cors");
+app.use(cors());
+app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
+app.use("/api", sessionRoutes);
 
 var participants = [];
 
 io.on("connection", async (socket) => {
-  const SessionId = socket.handshake.query.SessionId;
-  const UserId = socket.handshake.query.UserId;
-  const Email = socket.handshake.query.email;
-  const date = socket.handshake.query.date;
+  // if(Session.SessionID){
+  //   socket.join(SessionId)
 
-  const Session = await addSession(SessionId, Email, UserId, date, []);
-  console.log(Session);
+  //   socket.emit("creator-join",Session.UserId)
+  //   socket.broadcast.to(Session.SessionID).emit("announcement",)
+  // }
 
-  if(Session.SessionID){
-    socket.join(Session.SessionID)
-    socket.emit("creator-join",Session.UserId)
-    socket.broadcast.to(Session.SessionID).emit("announcement",)
-  }
-  
+  socket.on("enter-chat", async (data) => {
+    const SessionId = data.SessionId;
+    const UserId = data.UserId;
+    const Email = data.Email;
+    const date = data.date;
 
-  socket.on("enter-chat", (name) => {
-    participants.push({ id: socket.id, name: name });
+    const Session = await addSession(SessionId, Email, UserId, date, []);
 
-    socket.broadcast.emit("new-participant", name);
+    console.log(data);
+    // socket.broadcast.emit("new-participant", name);
   });
 
   socket.on("disconnect", () => {
