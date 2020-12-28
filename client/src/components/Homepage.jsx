@@ -6,7 +6,7 @@ import "rodal/lib/rodal.css";
 
 export default function Homepage() {
   const [modalStatus, showModal] = useState(false);
-  const [codeName, setCodeName] = useState("");
+  const [email, setEmail] = useState("");
 
   const { createSession } = useMain();
 
@@ -21,15 +21,15 @@ export default function Homepage() {
         height={200}
         showCloseButton={true}
       >
-        <form onSubmit={createSession.bind(this, codeName)}>
+        <form onSubmit={createSession.bind(this, email)}>
           <div className="codename__modal">
             <input
-              type="text"
-              placeholder="Enter your Codename"
+              type="email"
+              placeholder="Enter your Email"
               onChange={(e) => {
-                setCodeName(e.target.value);
+                setEmail(e.target.value);
               }}
-              value={codeName}
+              value={email}
               required
             />
             <button className="create__session__button" type="submit">

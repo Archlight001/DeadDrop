@@ -3,6 +3,8 @@ import { Route } from "react-router-dom";
 import Chat from "../components/Chat";
 import Homepage from "../components/Homepage";
 
+import { SocketProvider } from "../contexts/SocketProvider";
+
 export default function Main() {
   return (
     <div>
@@ -11,7 +13,9 @@ export default function Main() {
       </Route>
 
       <Route exact path="/chat">
+        <SocketProvider>
           <Chat />
+        </SocketProvider>
       </Route>
     </div>
   );

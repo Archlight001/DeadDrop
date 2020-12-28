@@ -16,9 +16,9 @@ export function MainProvider({ children }) {
 
     
 
-  function createSession(codeName) {
-    const newSessionId = uuidv4();
-    const newUserId = uuidv4();
+  function createSession(email) {
+    const SessionId = uuidv4();
+    const UserId = uuidv4();
 
     var date = new Date();
 
@@ -29,7 +29,7 @@ export function MainProvider({ children }) {
         date.setTime(date.getTime() + 1 * 24 * 60 * 60 * 1000);
         localStorage.setItem(
           "Data",
-          JSON.stringify({ newSessionId, newUserId,codeName, date: date.getTime() })
+          JSON.stringify({ SessionId, UserId,email, date: date.getTime() })
         );
       }
 
@@ -37,14 +37,14 @@ export function MainProvider({ children }) {
       date.setTime(date.getTime() + 1 * 24 * 60 * 60 * 1000);
       localStorage.setItem(
         "Data",
-        JSON.stringify({ newSessionId, newUserId,codeName, date: date.getTime() })
+        JSON.stringify({ SessionId, UserId,email, date: date.getTime() })
       );
     }
 
     setData(JSON.parse(localStorage.getItem("Data")))
 
-    // document.cookie = `sessionId=${newSessionId};expires=${date.toUTCString()}`
-    // document.cookie = `userId=${newUserId};expires=${date.toUTCString()}`
+    // document.cookie = `sessionId=${SessionId};expires=${date.toUTCString()}`
+    // document.cookie = `userId=${UserId};expires=${date.toUTCString()}`
   }
 
   useEffect(()=>{

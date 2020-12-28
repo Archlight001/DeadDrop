@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import SendIcon from "@material-ui/icons/Send";
 import "../css/Chat.css";
-import { io } from "socket.io-client";
 import { useHistory } from "react-router-dom";
 import {useMain} from "../contexts/MainProvider";
 
