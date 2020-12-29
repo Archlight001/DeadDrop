@@ -17,12 +17,12 @@ export function MainProvider({ children }) {
   const [data, setData] = useState(JSON.parse(localStorage.getItem("Data")));
 
   async function createSession(Email) {
-    const Result = await apiCall("post", "/api/validatemail", { Email });
+    const Result = await apiCall("post", "/api/validate", { Email });
+    console.log(Result);
 
     if (Result.exists) {
       alert("A Session has already been created with this mail");
     } else {
-
       const SessionId = uuidv4();
       const UserId = uuidv4();
 
@@ -53,23 +53,37 @@ export function MainProvider({ children }) {
     // document.cookie = `userId=${UserId};expires=${date.toUTCString()}`
   }
 
-  useEffect(()=>{
+  async function joinSession(SessionId, UserId) {
+    const Result = await apiCall("post", "/api/validate", { SessionId });
+
+    if (!Result.exists && localStorage.getItem("Data") !== null) {
+      localStorage.removeItem("Data");
+      setData(null);
+    } else if (Result.exists) {
+      localStorage.setItem(
+        "Data",
+        JSON.stringify({ SessionId, UserId, date: Result.Date })
+      );
+      setData(JSON.parse(localStorage.getItem("Data")));
+    }
+  }
+
+  useEffect(() => {
     console.log(data);
     if (data !== null) {
-        var date = new Date();
+      var date = new Date();
 
-        if (date.getTime() > data.date ) {
-            localStorage.removeItem("Data");
-            history.push("/")
-        }else{
-            history.push("/chat")
-        }
-
+      if (date.getTime() > data.date) {
+        localStorage.removeItem("Data");
+        history.push("/");
+      } else {
+        history.push("/chat");
+      }
     }
-  },[data])
+  }, [data]);
 
   return (
-    <MainContext.Provider value={{ createSession, data, setData }}>
+    <MainContext.Provider value={{ createSession, joinSession, data, setData }}>
       {children}
     </MainContext.Provider>
   );

@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router({ mergeParams: true });
-const { validateMail } = require("../handlers/session");
+const { validate} = require("../handlers/session");
 
-router.post("/validatemail", validateMail);
+router.post("/validate", validate);
 
 module.exports = router;

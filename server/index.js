@@ -5,9 +5,10 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const server = http.createServer(app);
 const { addSession } = require("./helpers/dbOps");
-const { addUser } = require("./helpers/users");
+const { addUser,getAllUsers,removeUser } = require("./helpers/users");
 
 const sessionRoutes = require("./routes/session");
+const { remove } = require("./models/session");
 
 const io = require("socket.io")(server, {
   cors: {
@@ -39,12 +40,25 @@ io.on("connection", async (socket) => {
 
     const Session = await addSession(SessionId, Email, UserId, date, []);
 
-    console.log(data);
+    console.log(Session);
+    
+    if(Session){
+      socket.join(Session.SessionID)
+      const user = addUser(UserId, SessionId,socket.id)
+
+      if(user.id !== undefined){
+        socket.broadcast.to(Session.SessionID).emit("new-user",user)
+      }    
+    }
+
+    console.log(getAllUsers());
     // socket.broadcast.emit("new-participant", name);
   });
 
   socket.on("disconnect", () => {
-    participants = [...participants.filter((user) => user.id !== socket.id)];
+
+    console.log("Disconnecting....");
+    console.log(removeUser(socket.id))
   });
 });
 
