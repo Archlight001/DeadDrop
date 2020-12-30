@@ -12,6 +12,10 @@ export function SocketProvider({ children }) {
   const { data } = useMain();
   const [socket,setSocket] = useState()
   console.log(data);
+
+ 
+
+
   useEffect(() => {
     // const socket = io("http://localhost:5000", {
     //   query: {
@@ -25,6 +29,10 @@ export function SocketProvider({ children }) {
     setSocket(socket)
 
     socket.emit("enter-chat",data)
+
+    socket.on("new-user",(user)=>{
+      console.log(user);
+    })
 
     return ()=> socket.close()
   }, [data]);

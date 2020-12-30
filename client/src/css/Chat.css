@@ -52,14 +52,15 @@
   overflow-y: scroll;
 }
 
-.message__field h4{
+.message__field h4 {
   margin-block-start: 0.5em;
   margin-block-end: 0.5em;
   text-align: center;
-  color: rgb(0, 255, 242)
+  color: rgb(0, 255, 242);
 }
 
-.message__content__L,.message__content__R{
+.message__content__L,
+.message__content__R {
   width: 50%;
   padding: 0.3em;
   color: white;
@@ -72,7 +73,6 @@
   border-top-right-radius: 0.8em;
   border-bottom-right-radius: 0.8em;
   background-color: brown;
-  
 }
 
 .side__right {
@@ -135,4 +135,101 @@
 
 .input__container svg:hover {
   cursor: pointer;
+}
+
+/* Participants List Stylings */
+.participants__list__container {
+  margin-top: 1.4em;
+  max-height: 80%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+.participants__list__item {
+  display: flex;
+  color: rgb(0, 255, 242);
+  font-weight: bolder;
+  border-top: rgb(0, 255, 242) solid;
+  border-bottom: rgb(0, 255, 242) solid;
+  border-width: thin;
+  padding: 0.1em;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.participants__list__item img {
+  margin-top: 1em;
+  margin-right: 1em;
+}
+
+.participant__email {
+  margin-top: -1em;
+  font-size: smaller;
+  color: rgb(255, 103, 103);
+  font-weight: bold;
+}
+
+.icon__indicator {
+  height: 1em;
+  width: 1em;
+}
+
+.icon__indicator__gray {
+  height: 0.9em;
+  width: 0.9em;
+}
+
+.list__name {
+  display: flex;
+}
+
+.list__name svg {
+  margin-top: 0.5em;
+  margin-left: 0.5em;
+}
+.list__name svg:hover {
+  cursor: pointer;
+}
+
+.add__participant {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1em;
+}
+
+.btn__add__participant {
+  width: 10em;
+  font-size: 0.8em;
+  height: 2em;
+  background-color: brown;
+  color: white;
+  border: none;
+  border-radius: 0.2em;
+}
+
+.btn__add__participant:hover{
+  cursor: pointer;
+  background-color: rgb(97, 15, 15);
+}
+
+
+/* Customize scroll bar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #232b2b; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgb(243, 240, 240); 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(248, 246, 246); 
 }

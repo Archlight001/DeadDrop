@@ -2,46 +2,42 @@ import React, { useEffect, useState } from "react";
 import SendIcon from "@material-ui/icons/Send";
 import "../css/Chat.css";
 import { useHistory } from "react-router-dom";
-import {useMain} from "../contexts/MainProvider";
-
-// const socket = io("http://localhost:5000",{forceNew:false});
-// socket.emit("enter-chat", "James");
+import { useMain } from "../contexts/MainProvider";
+import Participants from "./Participants";
 
 function Chat() {
-  let history = useHistory()  
-  let {data,setData} = useMain();
+  let history = useHistory();
+  let { data, setData } = useMain();
 
-  // const [messages, addMessage] = useState([]);
-  // const [name,setName] = useState("Jes")
+  let [participants, displayParticipants] = useState(false);
 
-  // useEffect(() => {
-  //   console.log()
-  //   socket.on("new-participant", participant =>{
-  //     console.log("Rendering");
-  //     addMessage(<h4>{participant} has joined the chat</h4>)
-  //   });
-
-  // },[]);
-
-  function endSession(){
+  function endSession() {
     localStorage.removeItem("Data");
-    setData(null)
+    setData(null);
     history.push("/");
-  } 
+  }
 
- 
+  function showParticipants() {
+    displayParticipants(true)
+  }
 
   return (
     <div className="main__chat__container">
       <div className="chat__session__buttons">
-        <button>Participants</button>
+        <button onClick={showParticipants}>Participants</button>
         <button onClick={endSession}>End Session</button>
       </div>
+
+      {participants && (
+        <Participants
+          displayParticipants={displayParticipants}
+          participantsDisplayStatus={participants}
+        />
+      )}
 
       <div className="chat__section">
         <div className="message__field">
           {/* <h4>Wolf has joined the chat</h4> */}
-
 
           {/* <div className="message__content__L">
             <p className="content__title">Wolf</p>
