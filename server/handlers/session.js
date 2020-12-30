@@ -32,3 +32,42 @@ exports.validate = async function validateMail(req, res, next) {
     return res.status(200).json({ exists: false });
   }
 };
+
+exports.getParticipants = async function getParticipants(req, res, next) {
+  const chatParticipants = [];
+  let SessionID = req.body.id;
+  let getSessionData = await db.Session.find({ SessionID });
+
+  chatParticipants.push({
+    UserId: getSessionData[0].UserId,
+    Email: getSessionData[0].Email,
+  });
+
+  if (getSessionData[0].Participants.length > 0) {
+    getSessionData[0].Participants.forEach((user) => {
+      chatParticipants.push({ UserId: user.id, Email: user.email });
+    });
+  }
+
+  return res.status(200).json(chatParticipants)
+};
+
+exports.addParticipant = async function addParticipant(req,res,next){
+  let email = req.body.email;
+  let id = req.body.id
+  let session = req.body.session
+
+  let addParticipant = await db.Session.find({SessionID:session})
+
+  if(addParticipant.length > 0){
+    addParticipant[0].Participants.push({id,email,session})
+    let save = await addParticipant[0].save()
+    if(save.SessionID !== undefined){
+      return res.status(200).json({Participants:save.Participants,status:true})
+    }else{
+      return res.status(500).json({status:false})
+    }
+  }
+
+  return res.status(500).json({status:false})
+}

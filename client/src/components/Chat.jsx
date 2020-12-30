@@ -1,15 +1,29 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import SendIcon from "@material-ui/icons/Send";
 import "../css/Chat.css";
 import { useHistory } from "react-router-dom";
 import { useMain } from "../contexts/MainProvider";
 import Participants from "./Participants";
+import { apiCall } from "../utils/connect";
 
 function Chat() {
   let history = useHistory();
   let { data, setData } = useMain();
 
-  let [participants, displayParticipants] = useState(false);
+  let [participantsDisplayStatus, displayParticipants] = useState(false);
+
+  let [participants, setParticipants] = useState([]);
+
+  useEffect(() => {
+    async function getParticipantsData() {
+      let chatParticipants = await apiCall("post", "/api/getParticipants", {
+        id: data.SessionId,
+      });
+      setParticipants(chatParticipants);
+    }
+
+    getParticipantsData();
+  }, []);
 
   function endSession() {
     localStorage.removeItem("Data");
@@ -18,7 +32,7 @@ function Chat() {
   }
 
   function showParticipants() {
-    displayParticipants(true)
+    displayParticipants(true);
   }
 
   return (
@@ -28,10 +42,13 @@ function Chat() {
         <button onClick={endSession}>End Session</button>
       </div>
 
-      {participants && (
+      {participantsDisplayStatus && (
         <Participants
           displayParticipants={displayParticipants}
-          participantsDisplayStatus={participants}
+          participantsDisplayStatus={participantsDisplayStatus}
+          SessionId={data.SessionId}
+          participants={participants}
+          setParticipants = {setParticipants}
         />
       )}
 

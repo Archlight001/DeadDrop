@@ -17,12 +17,18 @@ const io = require("socket.io")(server, {
   },
 });
 
+var codename = require('codename')();
+var filters = ['alliterative', 'random']
+  var  lists = ['cities']
+  var  myName = codename.generate(filters, lists);
+
+  //console.log(myName)
+
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/api", sessionRoutes);
 
-var participants = [];
 
 io.on("connection", async (socket) => {
   // if(Session.SessionID){

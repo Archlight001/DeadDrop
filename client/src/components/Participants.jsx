@@ -1,15 +1,38 @@
 import React from "react";
 import Rodal from "rodal";
+import { v4 as uuidv4 } from "uuid";
 
 import GreenIcon from "../images/greenIcon.ico";
 import GrayIcon from "../images/grayIcon.ico";
 import EditIcon from "@material-ui/icons/Edit";
 import CancelIcon from "@material-ui/icons/Cancel";
 
+import { apiCall } from "../utils/connect";
+
 export default function Participants({
   displayParticipants,
   participantsDisplayStatus,
+  SessionId,
+  participants,
+  setParticipants
 }) {
+
+  async function addParticipant() {
+    const UserId = uuidv4();
+    const email = prompt("Enter the Email of the Participant");
+    let addParticipant = await apiCall("post", "/api/addParticipant", {
+      email:email,
+      session: SessionId,
+      id: UserId,
+    });
+    if (addParticipant.status) {
+      alert("Added Successfully");
+      console.log(addParticipant);
+    } else {
+      alert("Operation Failed");
+    }
+  }
+
   return (
     <Rodal
       visible={participantsDisplayStatus}
@@ -45,12 +68,13 @@ export default function Participants({
               alt="Offline Icon"
             />
           </div>
-        </div>        
-        
+        </div>
       </div>
 
       <div className="add__participant">
-        <button className="btn__add__participant">Add Participant</button>
+        <button onClick={addParticipant} className="btn__add__participant">
+          Add Participant
+        </button>
       </div>
     </Rodal>
   );
