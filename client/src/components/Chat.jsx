@@ -3,19 +3,19 @@ import SendIcon from "@material-ui/icons/Send";
 import "../css/Chat.css";
 import { useHistory } from "react-router-dom";
 import { useMain } from "../contexts/MainProvider";
-import {useSocket} from "../contexts/SocketProvider"
+import { useSocket } from "../contexts/SocketProvider";
 import Participants from "./Participants";
 import { apiCall } from "../utils/connect";
 
 function Chat() {
   let history = useHistory();
-  let { data, setData,isAdmin } = useMain();
-  let {socket} = useSocket();
+  let { data, setData, isAdmin } = useMain();
+  let { socket } = useSocket();
 
   let [participantsDisplayStatus, displayParticipants] = useState(false);
 
   let [participants, setParticipants] = useState([]);
-  let [onlineParticipants,setOnlineParticipants] = useState([])
+  let [onlineParticipants, setOnlineParticipants] = useState([]);
 
   useEffect(() => {
     async function getParticipantsData() {
@@ -36,10 +36,24 @@ function Chat() {
 
   function showParticipants() {
     displayParticipants(true);
-    socket.emit("get-participants")
-    socket.on("get-participants", (data)=>{
-      setOnlineParticipants(data)
-    })
+    socket.emit("get-participants");
+    socket.on("get-participants", (data) => {
+      setOnlineParticipants(data);
+    });
+  }
+
+  async function deleteParticipant(UserId) {
+    var val = window.confirm("You are about to delete a user");
+    if (val) {
+      var SessionID = data.SessionId;
+      let deleteOperation = await apiCall("post", "/api/deleteParticipant", {
+        SessionID,
+        UserId,
+      });
+      if (deleteOperation.deleted) {
+        setParticipants(deleteOperation.Participants);
+      }
+    }
   }
 
   return (
@@ -53,12 +67,13 @@ function Chat() {
         <Participants
           displayParticipants={displayParticipants}
           participantsDisplayStatus={participantsDisplayStatus}
-          onlineParticipants = {onlineParticipants}
+          onlineParticipants={onlineParticipants}
           SessionId={data.SessionId}
           participants={participants}
-          setParticipants = {setParticipants}
-          isAdmin = {isAdmin}
-          CurrentUserId = {data.UserId}
+          setParticipants={setParticipants}
+          deleteParticipant={deleteParticipant}
+          isAdmin={isAdmin}
+          CurrentUserId={data.UserId}
         />
       )}
 
