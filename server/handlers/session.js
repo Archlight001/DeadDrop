@@ -102,3 +102,19 @@ exports.addParticipant = async function addParticipant(req, res, next) {
 
   return res.status(500).json({ status: false });
 };
+
+exports.isAdmin = async function isAdmin(req, res, next) {
+  try {
+    let UserId = req.body.id;
+
+    let isAdmin = await db.Session.find({ UserId });
+
+    if (isAdmin.length > 0) {
+      return res.status(200).json({ isAdmin: true });
+    } else {
+      return res.status(200).json({ isAdmin: false });
+    }
+  } catch (error) {
+    res.status(404).json({ isAdmin: false });
+  }
+};

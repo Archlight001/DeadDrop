@@ -16,6 +16,8 @@ export default function Participants({
   participants,
   setParticipants,
   onlineParticipants,
+  isAdmin,
+  CurrentUserId,
 }) {
   async function addParticipant() {
     const UserId = uuidv4();
@@ -35,7 +37,7 @@ export default function Participants({
   }
 
   //Put Participant data into div elements
-  const participantList = participants.map((participant,index) => {
+  const participantList = participants.map((participant, index) => {
     var isOnline = false;
 
     onlineParticipants.forEach((id) => {
@@ -52,8 +54,9 @@ export default function Participants({
             <p className="participant__email">{participant.Email}</p>
           </div>
 
-          <EditIcon />
-          <CancelIcon />
+          {CurrentUserId === participant.UserId && <EditIcon />}
+
+          {isAdmin && <CancelIcon />}
         </div>
 
         <div>
@@ -115,11 +118,13 @@ export default function Participants({
         {participantList}
       </div>
 
-      <div className="add__participant">
-        <button onClick={addParticipant} className="btn__add__participant">
-          Add Participant
-        </button>
-      </div>
+      {isAdmin && (
+        <div className="add__participant">
+          <button onClick={addParticipant} className="btn__add__participant">
+            Add Participant
+          </button>
+        </div>
+      )}
     </Rodal>
   );
 }

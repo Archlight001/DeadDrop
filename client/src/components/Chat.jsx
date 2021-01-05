@@ -9,7 +9,7 @@ import { apiCall } from "../utils/connect";
 
 function Chat() {
   let history = useHistory();
-  let { data, setData } = useMain();
+  let { data, setData,isAdmin } = useMain();
   let {socket} = useSocket();
 
   let [participantsDisplayStatus, displayParticipants] = useState(false);
@@ -57,6 +57,8 @@ function Chat() {
           SessionId={data.SessionId}
           participants={participants}
           setParticipants = {setParticipants}
+          isAdmin = {isAdmin}
+          CurrentUserId = {data.UserId}
         />
       )}
 

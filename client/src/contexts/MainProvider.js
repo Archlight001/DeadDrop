@@ -16,6 +16,8 @@ export function MainProvider({ children }) {
 
   const [data, setData] = useState(JSON.parse(localStorage.getItem("Data")));
 
+  const [isAdmin,setAdmin] = useState(false);
+
   async function createSession(Email) {
     const Result = await apiCall("post", "/api/validate", { Email });
 
@@ -69,6 +71,10 @@ export function MainProvider({ children }) {
 
   useEffect(() => {
     console.log(data);
+    async function checkAdmin(){
+      let checkUser = await apiCall("post","/api/isAdmin",{id:data.UserId})
+      setAdmin(checkUser.isAdmin)
+    }
     if (data !== null) {
       var date = new Date();
 
@@ -76,13 +82,14 @@ export function MainProvider({ children }) {
         localStorage.removeItem("Data");
         history.push("/");
       } else {
+        checkAdmin()
         history.push("/chat");
       }
     }
   }, [data]);
 
   return (
-    <MainContext.Provider value={{ createSession, joinSession, data, setData }}>
+    <MainContext.Provider value={{ createSession, joinSession, data, setData,isAdmin }}>
       {children}
     </MainContext.Provider>
   );
