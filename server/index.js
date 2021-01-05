@@ -5,7 +5,10 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const server = http.createServer(app);
 const { addSession } = require("./helpers/dbOps");
+
 const { addUser,getAllUsers,removeUser } = require("./helpers/users");
+
+const {generateCodeName} = require("./helpers/codenameGen")
 
 const sessionRoutes = require("./routes/session");
 const { remove } = require("./models/session");
@@ -17,12 +20,6 @@ const io = require("socket.io")(server, {
   },
 });
 
-var codename = require('codename')();
-var filters = ['alliterative', 'random']
-  var  lists = ['cities']
-  var  myName = codename.generate(filters, lists);
-
-  //console.log(myName)
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -42,9 +39,11 @@ io.on("connection", async (socket) => {
     const SessionId = data.SessionId;
     const UserId = data.UserId;
     const Email = data.Email;
+    const Codename = data.Codename
     const date = data.date;
 
-    const Session = await addSession(SessionId, Email, UserId, date, []);
+
+    const Session = await addSession(SessionId, Email, UserId,Codename, date, []);
 
     console.log(Session);
     

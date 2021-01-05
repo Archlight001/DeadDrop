@@ -18,7 +18,6 @@ export function MainProvider({ children }) {
 
   async function createSession(Email) {
     const Result = await apiCall("post", "/api/validate", { Email });
-    console.log(Result);
 
     if (Result.exists) {
       alert("A Session has already been created with this mail");
@@ -35,14 +34,14 @@ export function MainProvider({ children }) {
           date.setTime(date.getTime() + 1 * 24 * 60 * 60 * 1000);
           localStorage.setItem(
             "Data",
-            JSON.stringify({ SessionId, UserId, Email, date: date.getTime() })
+            JSON.stringify({ SessionId, UserId, Email, date: date.getTime(),Codename:Result.Codename })
           );
         }
       } else {
         date.setTime(date.getTime() + 1 * 24 * 60 * 60 * 1000);
         localStorage.setItem(
           "Data",
-          JSON.stringify({ SessionId, UserId, Email, date: date.getTime() })
+          JSON.stringify({ SessionId, UserId, Email, date: date.getTime(),Codename:Result.Codename })
         );
       }
 
@@ -62,7 +61,7 @@ export function MainProvider({ children }) {
     } else if (Result.exists) {
       localStorage.setItem(
         "Data",
-        JSON.stringify({ SessionId, UserId, date: Result.Date })
+        JSON.stringify({ SessionId, UserId, date: Result.Date,Codename:Result.Codename })
       );
       setData(JSON.parse(localStorage.getItem("Data")));
     }

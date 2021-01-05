@@ -5,6 +5,7 @@ exports.addSession = async function addSession(
   SessionID,
   Email,
   UserId,
+  Codename,
   Date,
   Participants
 ) {
@@ -14,7 +15,7 @@ exports.addSession = async function addSession(
     let { SessionID, Email, UserId, Date, Participants } = findSession[0];
     return { SessionID, Email, UserId, Date, Participants };
   } else {
-    let newSession = { SessionID, Email, UserId, Date, Participants };
+    let newSession = { SessionID, Email, UserId,Codename, Date, Participants };
     let session = await db.Session.create(newSession);
     return session;
   }

@@ -1,10 +1,13 @@
 const db = require("../models/index");
+const {generateCodeName,generateCodeNameP} = require("../helpers/codenameGen")
 
 exports.validate = async function validateMail(req, res, next) {
   const Email = req.body.Email;
   const SessionID = req.body.SessionId;
 
-  console.log(Email);
+  const Codename = generateCodeName();
+
+  console.log("Codename ",Codename)
 
   if (Email !== undefined) {
     var checkSession = await db.Session.find({ Email });
@@ -15,7 +18,7 @@ exports.validate = async function validateMail(req, res, next) {
   if (checkSession.length !== 0) {
     console.log(checkSession[0]);
     let currentDate = new Date();
-    let { id, Date: SessionDate } = checkSession[0];
+    let { id, Date: SessionDate,Codename } = checkSession[0];
 
     if (currentDate.getTime() > SessionDate) {
       //Delete Entry
@@ -23,13 +26,13 @@ exports.validate = async function validateMail(req, res, next) {
       return res.status(200).json({ exists: false });
     } else {
       if (SessionID !== undefined) {
-        return res.status(200).json({ exists: true, Date: SessionDate });
+        return res.status(200).json({ exists: true, Date: SessionDate,Codename });
       } else {
-        return res.status(200).json({ exists: true });
+        return res.status(200).json({ exists: true});
       }
     }
   } else {
-    return res.status(200).json({ exists: false });
+    return res.status(200).json({ exists: false,Codename});
   }
 };
 
@@ -57,10 +60,12 @@ exports.addParticipant = async function addParticipant(req,res,next){
   let id = req.body.id
   let session = req.body.session
 
+  const Codename = await generateCodeNameP(session);
+
   let addParticipant = await db.Session.find({SessionID:session})
 
   if(addParticipant.length > 0){
-    addParticipant[0].Participants.push({id,email,session})
+    addParticipant[0].Participants.push({id,email,Codename,session})
     let save = await addParticipant[0].save()
     if(save.SessionID !== undefined){
       return res.status(200).json({Participants:save.Participants,status:true})

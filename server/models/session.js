@@ -13,6 +13,10 @@ const sessionSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  Codename:{
+    type:String,
+    required:true
+  },
   Date: {
     type: String,
     required: true,
