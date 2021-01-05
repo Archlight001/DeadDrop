@@ -60,6 +60,11 @@ io.on("connection", async (socket) => {
     // socket.broadcast.emit("new-participant", name);
   });
 
+  socket.on("get-participants",()=>{
+    let users = getAllUsers().map(user => user.id)
+    socket.emit("get-participants",users)
+  })
+
   socket.on("disconnect", () => {
 
     console.log("Disconnecting....");

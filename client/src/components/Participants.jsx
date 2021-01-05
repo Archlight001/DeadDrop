@@ -15,6 +15,7 @@ export default function Participants({
   SessionId,
   participants,
   setParticipants,
+  onlineParticipants,
 }) {
   async function addParticipant() {
     const UserId = uuidv4();
@@ -33,28 +34,46 @@ export default function Participants({
     }
   }
 
-  const p = participants.map((participant) => (
-    <div className="participants__list__item">
-      <div className="list__name">
-        <div>
-          <p>{participant.Codename}</p>
-          <p className="participant__email">{participant.Email}</p>
+  //Put Participant data into div elements
+  const participantList = participants.map((participant,index) => {
+    var isOnline = false;
+
+    onlineParticipants.forEach((id) => {
+      if (id === participant.UserId) {
+        isOnline = true;
+      }
+    });
+
+    return (
+      <div className="participants__list__item" key={index}>
+        <div className="list__name">
+          <div>
+            <p>{participant.Codename}</p>
+            <p className="participant__email">{participant.Email}</p>
+          </div>
+
+          <EditIcon />
+          <CancelIcon />
         </div>
 
-        <EditIcon />
-        <CancelIcon />
+        <div>
+          {isOnline ? (
+            <img
+              src={GreenIcon}
+              className="icon__indicator"
+              alt="Online Icon"
+            />
+          ) : (
+            <img
+              src={GrayIcon}
+              className="icon__indicator__gray"
+              alt="Offline Icon"
+            />
+          )}
+        </div>
       </div>
-
-      <div>
-        <img src={GreenIcon} className="icon__indicator" alt="Online Icon" />
-        <img
-          src={GrayIcon}
-          className="icon__indicator__gray"
-          alt="Offline Icon"
-        />
-      </div>
-    </div>
-  ));
+    );
+  });
 
   return (
     <Rodal
@@ -93,7 +112,7 @@ export default function Participants({
           </div>
         </div> */}
 
-        {p}
+        {participantList}
       </div>
 
       <div className="add__participant">

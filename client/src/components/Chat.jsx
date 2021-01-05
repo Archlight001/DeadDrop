@@ -3,16 +3,19 @@ import SendIcon from "@material-ui/icons/Send";
 import "../css/Chat.css";
 import { useHistory } from "react-router-dom";
 import { useMain } from "../contexts/MainProvider";
+import {useSocket} from "../contexts/SocketProvider"
 import Participants from "./Participants";
 import { apiCall } from "../utils/connect";
 
 function Chat() {
   let history = useHistory();
   let { data, setData } = useMain();
+  let {socket} = useSocket();
 
   let [participantsDisplayStatus, displayParticipants] = useState(false);
 
   let [participants, setParticipants] = useState([]);
+  let [onlineParticipants,setOnlineParticipants] = useState([])
 
   useEffect(() => {
     async function getParticipantsData() {
@@ -33,6 +36,10 @@ function Chat() {
 
   function showParticipants() {
     displayParticipants(true);
+    socket.emit("get-participants")
+    socket.on("get-participants", (data)=>{
+      setOnlineParticipants(data)
+    })
   }
 
   return (
@@ -46,6 +53,7 @@ function Chat() {
         <Participants
           displayParticipants={displayParticipants}
           participantsDisplayStatus={participantsDisplayStatus}
+          onlineParticipants = {onlineParticipants}
           SessionId={data.SessionId}
           participants={participants}
           setParticipants = {setParticipants}
