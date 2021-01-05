@@ -1,5 +1,8 @@
 const db = require("../models/index");
-const {generateCodeName,generateCodeNameP} = require("../helpers/codenameGen")
+const {
+  generateCodeName,
+  generateCodeNameP,
+} = require("../helpers/codenameGen");
 
 exports.validate = async function validateMail(req, res, next) {
   const Email = req.body.Email;
@@ -7,7 +10,7 @@ exports.validate = async function validateMail(req, res, next) {
 
   const Codename = generateCodeName();
 
-  console.log("Codename ",Codename)
+  console.log("Codename ", Codename);
 
   if (Email !== undefined) {
     var checkSession = await db.Session.find({ Email });
@@ -18,7 +21,7 @@ exports.validate = async function validateMail(req, res, next) {
   if (checkSession.length !== 0) {
     console.log(checkSession[0]);
     let currentDate = new Date();
-    let { id, Date: SessionDate,Codename } = checkSession[0];
+    let { id, Date: SessionDate, Codename } = checkSession[0];
 
     if (currentDate.getTime() > SessionDate) {
       //Delete Entry
@@ -26,13 +29,15 @@ exports.validate = async function validateMail(req, res, next) {
       return res.status(200).json({ exists: false });
     } else {
       if (SessionID !== undefined) {
-        return res.status(200).json({ exists: true, Date: SessionDate,Codename });
+        return res
+          .status(200)
+          .json({ exists: true, Date: SessionDate, Codename });
       } else {
-        return res.status(200).json({ exists: true});
+        return res.status(200).json({ exists: true });
       }
     }
   } else {
-    return res.status(200).json({ exists: false,Codename});
+    return res.status(200).json({ exists: false, Codename });
   }
 };
 
@@ -44,35 +49,56 @@ exports.getParticipants = async function getParticipants(req, res, next) {
   chatParticipants.push({
     UserId: getSessionData[0].UserId,
     Email: getSessionData[0].Email,
+    Codename: getSessionData[0].Codename,
   });
 
   if (getSessionData[0].Participants.length > 0) {
     getSessionData[0].Participants.forEach((user) => {
-      chatParticipants.push({ UserId: user.id, Email: user.email });
+      chatParticipants.push({
+        UserId: user.id,
+        Email: user.email,
+        Codename: user.Codename,
+      });
     });
   }
 
-  return res.status(200).json(chatParticipants)
+  return res.status(200).json(chatParticipants);
 };
 
-exports.addParticipant = async function addParticipant(req,res,next){
+exports.addParticipant = async function addParticipant(req, res, next) {
   let email = req.body.email;
-  let id = req.body.id
-  let session = req.body.session
+  let id = req.body.id;
+  let session = req.body.session;
 
   const Codename = await generateCodeNameP(session);
 
-  let addParticipant = await db.Session.find({SessionID:session})
+  let addParticipant = await db.Session.find({ SessionID: session });
 
-  if(addParticipant.length > 0){
-    addParticipant[0].Participants.push({id,email,Codename,session})
-    let save = await addParticipant[0].save()
-    if(save.SessionID !== undefined){
-      return res.status(200).json({Participants:save.Participants,status:true})
-    }else{
-      return res.status(500).json({status:false})
+  if (addParticipant.length > 0) {
+    addParticipant[0].Participants.push({ id, email, Codename, session });
+    let save = await addParticipant[0].save();
+    if (save.SessionID !== undefined) {
+      let Participants = [];
+      Participants.push({
+        UserId: save.UserId,
+        Email: save.Email,
+        Codename: save.Codename,
+      });
+
+      if (save.Participants.length > 0) {
+        save.Participants.forEach((user) => {
+          Participants.push({
+            UserId: user.id,
+            Email: user.email,
+            Codename: user.Codename,
+          });
+        });
+      }
+      return res.status(200).json({ Participants, status: true });
+    } else {
+      return res.status(500).json({ status: false });
     }
   }
 
-  return res.status(500).json({status:false})
-}
+  return res.status(500).json({ status: false });
+};

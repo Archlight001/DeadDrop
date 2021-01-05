@@ -14,24 +14,47 @@ export default function Participants({
   participantsDisplayStatus,
   SessionId,
   participants,
-  setParticipants
+  setParticipants,
 }) {
-
   async function addParticipant() {
     const UserId = uuidv4();
     const email = prompt("Enter the Email of the Participant");
     let addParticipant = await apiCall("post", "/api/addParticipant", {
-      email:email,
+      email: email,
       session: SessionId,
       id: UserId,
     });
     if (addParticipant.status) {
       alert("Added Successfully");
       console.log(addParticipant);
+      setParticipants(addParticipant.Participants);
     } else {
       alert("Operation Failed");
     }
   }
+
+  const p = participants.map((participant) => (
+    <div className="participants__list__item">
+      <div className="list__name">
+        <div>
+          <p>{participant.Codename}</p>
+          <p className="participant__email">{participant.Email}</p>
+        </div>
+
+        <EditIcon />
+        <CancelIcon />
+      </div>
+
+      <div>
+        <img src={GreenIcon} className="icon__indicator" alt="Online Icon" />
+        <img
+          src={GrayIcon}
+          className="icon__indicator__gray"
+          alt="Offline Icon"
+        />
+      </div>
+    </div>
+  ));
 
   return (
     <Rodal
@@ -45,7 +68,7 @@ export default function Participants({
       customStyles={{ backgroundColor: "#232b2b" }}
     >
       <div className="participants__list__container">
-        <div className="participants__list__item">
+        {/* <div className="participants__list__item">
           <div className="list__name">
             <div>
               <p>Codename</p>
@@ -68,7 +91,9 @@ export default function Participants({
               alt="Offline Icon"
             />
           </div>
-        </div>
+        </div> */}
+
+        {p}
       </div>
 
       <div className="add__participant">
