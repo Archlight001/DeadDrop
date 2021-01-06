@@ -17,6 +17,7 @@ export default function Participants({
   setParticipants,
   onlineParticipants,
   deleteParticipant,
+  editCodename,
   isAdmin,
   CurrentUserId,
 }) {
@@ -55,7 +56,9 @@ export default function Participants({
             <p className="participant__email">{participant.Email}</p>
           </div>
 
-          {CurrentUserId === participant.UserId && <EditIcon />}
+          {CurrentUserId === participant.UserId && (
+            <EditIcon onClick={editCodename.bind(this, participant.UserId)} />
+          )}
 
           {isAdmin && CurrentUserId !== participant.UserId && (
             <CancelIcon

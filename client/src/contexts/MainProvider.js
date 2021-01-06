@@ -55,7 +55,7 @@ export function MainProvider({ children }) {
   }
 
   async function joinSession(SessionId, UserId) {
-    const Result = await apiCall("post", "/api/validate", { SessionId });
+    const Result = await apiCall("post", "/api/validate", { SessionId,UserId });
 
     if (!Result.exists && localStorage.getItem("Data") !== null) {
       localStorage.removeItem("Data");
