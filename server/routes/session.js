@@ -7,6 +7,7 @@ const {
   isAdmin,
   deleteParticipant,
   editCodename,
+  deleteSession
 } = require("../handlers/session");
 
 router.post("/validate", validate);
@@ -15,5 +16,6 @@ router.post("/addParticipant", addParticipant);
 router.post("/deleteParticipant", deleteParticipant);
 router.post("/isAdmin", isAdmin);
 router.post("/editCodename", editCodename);
+router.post("/deleteSession",deleteSession)
 
 module.exports = router;

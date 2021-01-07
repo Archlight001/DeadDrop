@@ -16,7 +16,7 @@ export function MainProvider({ children }) {
 
   const [data, setData] = useState(JSON.parse(localStorage.getItem("Data")));
 
-  const [isAdmin,setAdmin] = useState(false);
+  const [isAdmin, setAdmin] = useState(false);
 
   async function createSession(Email) {
     const Result = await apiCall("post", "/api/validate", { Email });
@@ -36,14 +36,27 @@ export function MainProvider({ children }) {
           date.setTime(date.getTime() + 1 * 24 * 60 * 60 * 1000);
           localStorage.setItem(
             "Data",
-            JSON.stringify({ SessionId, UserId, Email, date: date.getTime(),Codename:Result.Codename })
+            JSON.stringify({
+              SessionId,
+              UserId,
+              Email,
+              date: date.getTime(),
+              Codename: Result.Codename,
+            })
           );
         }
       } else {
-        date.setTime(date.getTime() + 1 * 24 * 60 * 60 * 1000);
+        // date.setTime(date.getTime() + 1 * 24 * 60 * 60 * 1000);
+        date.setTime(date.getTime() +  5 * 1000);
         localStorage.setItem(
           "Data",
-          JSON.stringify({ SessionId, UserId, Email, date: date.getTime(),Codename:Result.Codename })
+          JSON.stringify({
+            SessionId,
+            UserId,
+            Email,
+            date: date.getTime(),
+            Codename: Result.Codename,
+          })
         );
       }
 
@@ -55,7 +68,10 @@ export function MainProvider({ children }) {
   }
 
   async function joinSession(SessionId, UserId) {
-    const Result = await apiCall("post", "/api/validate", { SessionId,UserId });
+    const Result = await apiCall("post", "/api/validate", {
+      SessionId,
+      UserId,
+    });
 
     if (!Result.exists && localStorage.getItem("Data") !== null) {
       localStorage.removeItem("Data");
@@ -63,7 +79,12 @@ export function MainProvider({ children }) {
     } else if (Result.exists) {
       localStorage.setItem(
         "Data",
-        JSON.stringify({ SessionId, UserId, date: Result.Date,Codename:Result.Codename })
+        JSON.stringify({
+          SessionId,
+          UserId,
+          date: Result.Date,
+          Codename: Result.Codename,
+        })
       );
       setData(JSON.parse(localStorage.getItem("Data")));
     }
@@ -71,25 +92,41 @@ export function MainProvider({ children }) {
 
   useEffect(() => {
     console.log(data);
-    async function checkAdmin(){
-      let checkUser = await apiCall("post","/api/isAdmin",{id:data.UserId})
-      setAdmin(checkUser.isAdmin)
+    async function checkAdmin() {
+      let checkUser = await apiCall("post", "/api/isAdmin", {
+        id: data.UserId,
+      });
+      setAdmin(checkUser.isAdmin);
     }
+
+    async function deleteSession() {
+      let UserId = data.UserId;
+      let SessionID = data.SessionId;
+      await apiCall("post", "/api/deleteSession", {
+        UserId,
+        SessionID,
+      })
+    }
+
     if (data !== null) {
       var date = new Date();
 
       if (date.getTime() > data.date) {
+        deleteSession();
         localStorage.removeItem("Data");
+        setData(null)
         history.push("/");
       } else {
-        checkAdmin()
+        checkAdmin();
         history.push("/chat");
       }
     }
   }, [data]);
 
   return (
-    <MainContext.Provider value={{ createSession, joinSession, data, setData,isAdmin }}>
+    <MainContext.Provider
+      value={{ createSession, joinSession, data, setData, isAdmin }}
+    >
       {children}
     </MainContext.Provider>
   );

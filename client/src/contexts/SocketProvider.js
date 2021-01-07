@@ -10,32 +10,27 @@ export function useSocket() {
 
 export function SocketProvider({ children }) {
   const { data } = useMain();
-  const [socket,setSocket] = useState()
+  const [socket, setSocket] = useState();
   console.log(data);
 
- 
-
-
   useEffect(() => {
-    // const socket = io("http://localhost:5000", {
-    //   query: {
-    //     SessionId: data.SessionId,
-    //     UserId: data.UserId,
-    //     email: data.email,
-    //     date:data.date
-    //   },
-    // });
-    const socket = io("http://localhost:5000");
-    setSocket(socket)
+    if (data !== null) {
+      const socket = io("http://localhost:5000");
+      setSocket(socket);
 
-    socket.emit("enter-chat",data)
+      socket.emit("enter-chat", data);
 
-    socket.on("new-user",(user)=>{
-      console.log(user);
-    })
+      socket.on("new-user", (user) => {
+        console.log(user);
+      });
 
-    return ()=> socket.close()
+      return () => socket.close();
+    }
   }, [data]);
 
-  return <SocketContext.Provider value={{socket}}>{children}</SocketContext.Provider>;
+  return (
+    <SocketContext.Provider value={{ socket }}>
+      {children}
+    </SocketContext.Provider>
+  );
 }

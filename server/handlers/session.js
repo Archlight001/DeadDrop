@@ -213,3 +213,31 @@ function generateParticipants(save) {
 
   return Participants;
 }
+
+exports.deleteSession = async function deleteSession(req,res,next){
+  try {
+    let UserId = req.body.UserId
+    let SessionID = req.body.SessionID;
+
+    let findSession = await db.Session.find({SessionID})
+
+    if(findSession.length > 0){
+      if(findSession[0].UserId === UserId){
+        let save = await findSession[0].remove()
+        console.log(save);
+        if(save.SessionID !== undefined){
+          return res.status(200).json({status:"success"})
+        }else{
+          return res.status(200).json({status:"failed"})
+        }
+      }else{
+        return res.status(200).json({status:"success"})
+      }
+    }else{
+      return res.status(500).json({status:"failed"})
+    }
+
+  } catch (error) {
+    res.status(500).json({status:"failed"})
+  }
+}

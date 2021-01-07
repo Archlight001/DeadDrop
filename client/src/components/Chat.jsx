@@ -18,20 +18,37 @@ function Chat() {
   let [onlineParticipants, setOnlineParticipants] = useState([]);
 
   useEffect(() => {
-    async function getParticipantsData() {
-      let chatParticipants = await apiCall("post", "/api/getParticipants", {
-        id: data.SessionId,
-      });
-      setParticipants(chatParticipants);
+    var date = new Date();
+
+    if (date.getTime() < data.date) {
+      async function getParticipantsData() {
+        let chatParticipants = await apiCall("post", "/api/getParticipants", {
+          id: data.SessionId,
+        });
+        setParticipants(chatParticipants);
+      }
+
+      if (data !== null) {
+         getParticipantsData();
+      }
     }
+  }, [data]);
 
-    getParticipantsData();
-  }, []);
+  async function endSession() {
+    let UserId = data.UserId;
+    let SessionID = data.SessionId;
+    let deleteSession = await apiCall("post", "/api/deleteSession", {
+      UserId,
+      SessionID,
+    });
 
-  function endSession() {
-    localStorage.removeItem("Data");
-    setData(null);
-    history.push("/");
+    if (deleteSession.status === "success") {
+      localStorage.removeItem("Data");
+      setData(null);
+      history.push("/");
+    } else {
+      alert("An error has occurred");
+    }
   }
 
   function showParticipants() {
@@ -56,18 +73,22 @@ function Chat() {
     }
   }
 
-  async function editCodename(UserId){
+  async function editCodename(UserId) {
     var newCodename = prompt("Enter your new Codename");
-    if(newCodename.trim() !== ""){
-      var con = window.confirm(`Changing codename to ${newCodename} ?`)
-      if(con){
+    if (newCodename.trim() !== "") {
+      var con = window.confirm(`Changing codename to ${newCodename} ?`);
+      if (con) {
         var SessionID = data.SessionId;
-        var editOperation = await apiCall("post","/api/editCodename",{SessionID,UserId,newCodename})
-        if(editOperation.status === "success"){
-          let newData = {...data,Codename:editOperation.newCodename}
-          localStorage.setItem("Data",JSON.stringify(newData))
-          setData(newData)
-          setParticipants(editOperation.Participants)
+        var editOperation = await apiCall("post", "/api/editCodename", {
+          SessionID,
+          UserId,
+          newCodename,
+        });
+        if (editOperation.status === "success") {
+          let newData = { ...data, Codename: editOperation.newCodename };
+          localStorage.setItem("Data", JSON.stringify(newData));
+          setData(newData);
+          setParticipants(editOperation.Participants);
         }
       }
     }
@@ -89,7 +110,7 @@ function Chat() {
           participants={participants}
           setParticipants={setParticipants}
           deleteParticipant={deleteParticipant}
-          editCodename = {editCodename}
+          editCodename={editCodename}
           isAdmin={isAdmin}
           CurrentUserId={data.UserId}
         />

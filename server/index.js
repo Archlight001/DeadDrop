@@ -6,9 +6,7 @@ const bodyParser = require("body-parser");
 const server = http.createServer(app);
 const { addSession } = require("./helpers/dbOps");
 
-const { addUser,getAllUsers,removeUser } = require("./helpers/users");
-
-const {generateCodeName} = require("./helpers/codenameGen")
+const { addUser, getAllUsers, removeUser } = require("./helpers/users");
 
 const sessionRoutes = require("./routes/session");
 const { remove } = require("./models/session");
@@ -20,12 +18,10 @@ const io = require("socket.io")(server, {
   },
 });
 
-
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/api", sessionRoutes);
-
 
 io.on("connection", async (socket) => {
   // if(Session.SessionID){
@@ -39,36 +35,41 @@ io.on("connection", async (socket) => {
     const SessionId = data.SessionId;
     const UserId = data.UserId;
     const Email = data.Email;
-    const Codename = data.Codename
+    const Codename = data.Codename;
     const date = data.date;
 
-
-    const Session = await addSession(SessionId, Email, UserId,Codename, date, []);
+    const Session = await addSession(
+      SessionId,
+      Email,
+      UserId,
+      Codename,
+      date,
+      []
+    );
 
     console.log(Session);
-    
-    if(Session){
-      socket.join(Session.SessionID)
-      const user = addUser(UserId, SessionId,socket.id)
 
-      if(user.id !== undefined){
-        socket.broadcast.to(Session.SessionID).emit("new-user",user)
-      }    
+    if (Session) {
+      socket.join(Session.SessionID);
+      const user = addUser(UserId, SessionId, socket.id);
+
+      if (user.id !== undefined) {
+        socket.broadcast.to(Session.SessionID).emit("new-user", user);
+      }
     }
 
     console.log(getAllUsers());
     // socket.broadcast.emit("new-participant", name);
   });
 
-  socket.on("get-participants",()=>{
-    let users = getAllUsers().map(user => user.id)
-    socket.emit("get-participants",users)
-  })
+  socket.on("get-participants", () => {
+    let users = getAllUsers().map((user) => user.id);
+    socket.emit("get-participants", users);
+  });
 
   socket.on("disconnect", () => {
-
     console.log("Disconnecting....");
-    console.log(removeUser(socket.id))
+    console.log(removeUser(socket.id));
   });
 });
 

@@ -20,7 +20,7 @@ function validateName(name, sessionCodenames) {
       return name;
     } else {
       var n = codename.generate(filters, lists);
-      validateName(n, []);
+      return validateName(n, []);
     }
   } else {
     let checkCodenames = sessionCodenames.every(
@@ -30,7 +30,7 @@ function validateName(name, sessionCodenames) {
       return name;
     } else {
       var n = codename.generate(filters, lists);
-      validateName(n, sessionCodenames);
+      return validateName(n, sessionCodenames);
     }
   }
 }

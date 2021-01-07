@@ -50,8 +50,8 @@ export default function Homepage() {
       <button
         onClick={joinSession.bind(
           this,
-          "b6cb9b56-20a8-482b-bd0a-1a2d97c39f46",
-          "02fbfd70-43b6-4692-9a47-b26a3e78fe66"
+          "bcf9cfb6-cae9-4b36-a840-00ef05a609a2",
+          "caa2b3ca-65d0-4c47-b2a7-8cd9c219bc1f"
         )}
       >
         Join Session
