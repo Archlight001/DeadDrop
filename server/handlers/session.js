@@ -4,6 +4,27 @@ const {
   generateCodeNameP,
 } = require("../helpers/codenameGen");
 
+exports.createSession = async function (req, res, next) {
+  const SessionID = req.body.SessionId;
+  const Email = req.body.Email;
+  const UserId = req.body.UserId;
+  const Codename = req.body.Codename;
+  const Date = req.body.date;
+  const Participants = [];
+
+  try {
+    let newSession = { SessionID, Email, UserId, Codename, Date, Participants };
+    let session = await db.Session.create(newSession);
+
+    if (session) {
+      return res.status(200).json({ status: "success" });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: error.message });
+  }
+};
+
 exports.validate = async function validateMail(req, res, next) {
   const Email = req.body.Email;
   const SessionID = req.body.SessionId;
@@ -138,6 +159,7 @@ exports.deleteParticipant = async function deleteParticipant(req, res, next) {
 exports.isAdmin = async function isAdmin(req, res, next) {
   try {
     let UserId = req.body.id;
+    console.log("UserID ", UserId);
 
     let isAdmin = await db.Session.find({ UserId });
 
@@ -162,20 +184,23 @@ exports.editCodename = async function editCodename(req, res, next) {
       if (Session[0].UserId === UserId) {
         Session[0].Codename = newCodename;
       } else {
-        let nUser = {Codename:newCodename}
-        Session[0].Participants = Session[0].Participants.filter(user =>{
-          if(user.id === UserId){
-            
-            nUser = {id:user.id,email:user.email,...nUser,session:user.session}
-            
+        let nUser = { Codename: newCodename };
+        Session[0].Participants = Session[0].Participants.filter((user) => {
+          if (user.id === UserId) {
+            nUser = {
+              id: user.id,
+              email: user.email,
+              ...nUser,
+              session: user.session,
+            };
           }
-          return user.id !== UserId
-        })
-        
-        Session[0].Participants.push(nUser)        
+          return user.id !== UserId;
+        });
+
+        Session[0].Participants.push(nUser);
       }
 
-      let save = await Session[0].save()
+      let save = await Session[0].save();
       if (save.SessionID != undefined) {
         let Participants = generateParticipants(save);
 
@@ -214,30 +239,29 @@ function generateParticipants(save) {
   return Participants;
 }
 
-exports.deleteSession = async function deleteSession(req,res,next){
+exports.deleteSession = async function deleteSession(req, res, next) {
   try {
-    let UserId = req.body.UserId
+    let UserId = req.body.UserId;
     let SessionID = req.body.SessionID;
 
-    let findSession = await db.Session.find({SessionID})
+    let findSession = await db.Session.find({ SessionID });
 
-    if(findSession.length > 0){
-      if(findSession[0].UserId === UserId){
-        let save = await findSession[0].remove()
+    if (findSession.length > 0) {
+      if (findSession[0].UserId === UserId) {
+        let save = await findSession[0].remove();
         console.log(save);
-        if(save.SessionID !== undefined){
-          return res.status(200).json({status:"success"})
-        }else{
-          return res.status(200).json({status:"failed"})
+        if (save.SessionID !== undefined) {
+          return res.status(200).json({ status: "success" });
+        } else {
+          return res.status(200).json({ status: "failed" });
         }
-      }else{
-        return res.status(200).json({status:"success"})
+      } else {
+        return res.status(200).json({ status: "success" });
       }
-    }else{
-      return res.status(500).json({status:"failed"})
+    } else {
+      return res.status(500).json({ status: "failed" });
     }
-
   } catch (error) {
-    res.status(500).json({status:"failed"})
+    res.status(500).json({ status: "failed" });
   }
-}
+};

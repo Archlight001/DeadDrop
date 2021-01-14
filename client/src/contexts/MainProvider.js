@@ -46,8 +46,9 @@ export function MainProvider({ children }) {
           );
         }
       } else {
-        // date.setTime(date.getTime() + 1 * 24 * 60 * 60 * 1000);
-        date.setTime(date.getTime() +  5 * 1000);
+        date.setTime(date.getTime() + 1 * 24 * 60 * 60 * 1000);
+        // date.setTime(date.getTime() +  5 * 1000);
+
         localStorage.setItem(
           "Data",
           JSON.stringify({
@@ -60,11 +61,20 @@ export function MainProvider({ children }) {
         );
       }
 
-      setData(JSON.parse(localStorage.getItem("Data")));
-    }
+      const createnewSession = await apiCall(
+        "post",
+        "/api/createSession",
+        JSON.parse(localStorage.getItem("Data"))
+      );
 
-    // document.cookie = `sessionId=${SessionId};expires=${date.toUTCString()}`
-    // document.cookie = `userId=${UserId};expires=${date.toUTCString()}`
+      if(createnewSession.status === "success"){
+        setData(JSON.parse(localStorage.getItem("Data")));
+      }else{
+        localStorage.removeItem("Data");
+        console.log("An error has occured")
+      }
+
+    }
   }
 
   async function joinSession(SessionId, UserId) {
@@ -91,11 +101,12 @@ export function MainProvider({ children }) {
   }
 
   useEffect(() => {
-    console.log(data);
     async function checkAdmin() {
+      console.log(data.UserId);
       let checkUser = await apiCall("post", "/api/isAdmin", {
         id: data.UserId,
       });
+      console.log("Checkuser ", checkUser);
       setAdmin(checkUser.isAdmin);
     }
 
@@ -105,7 +116,7 @@ export function MainProvider({ children }) {
       await apiCall("post", "/api/deleteSession", {
         UserId,
         SessionID,
-      })
+      });
     }
 
     if (data !== null) {
@@ -114,7 +125,7 @@ export function MainProvider({ children }) {
       if (date.getTime() > data.date) {
         deleteSession();
         localStorage.removeItem("Data");
-        setData(null)
+        setData(null);
         history.push("/");
       } else {
         checkAdmin();

@@ -21,6 +21,9 @@ export default function Participants({
   isAdmin,
   CurrentUserId,
 }) {
+
+  console.log(isAdmin);
+  console.log(CurrentUserId);
   async function addParticipant() {
     const UserId = uuidv4();
     const email = prompt("Enter the Email of the Participant");

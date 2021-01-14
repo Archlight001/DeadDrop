@@ -11,7 +11,7 @@ export function useSocket() {
 export function SocketProvider({ children }) {
   const { data } = useMain();
   const [socket, setSocket] = useState();
-  console.log(data);
+  //console.log(data);
 
   useEffect(() => {
     if (data !== null) {

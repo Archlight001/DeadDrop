@@ -18,36 +18,35 @@ function Chat() {
   let [onlineParticipants, setOnlineParticipants] = useState([]);
 
   useEffect(() => {
-    var date = new Date();
-
-    if (date.getTime() < data.date) {
-      async function getParticipantsData() {
-        let chatParticipants = await apiCall("post", "/api/getParticipants", {
-          id: data.SessionId,
-        });
-        setParticipants(chatParticipants);
-      }
-
-      if (data !== null) {
-         getParticipantsData();
-      }
+    async function getParticipantsData() {
+      let chatParticipants = await apiCall("post", "/api/getParticipants", {
+        id: data.SessionId,
+      });
+      console.log(chatParticipants);
+      setParticipants(chatParticipants);
     }
-  }, [data]);
+
+    if (data !== null) {
+      getParticipantsData();
+    }
+  }, []);
+
+
+  //PARTICIPANT LIST NOT SHOWING UP
 
   async function endSession() {
     let UserId = data.UserId;
     let SessionID = data.SessionId;
     let deleteSession = await apiCall("post", "/api/deleteSession", {
-      UserId,
-      SessionID,
+      UserId,SessionID
     });
 
-    if (deleteSession.status === "success") {
-      localStorage.removeItem("Data");
-      setData(null);
-      history.push("/");
-    } else {
-      alert("An error has occurred");
+    if(deleteSession.status === "success"){
+    localStorage.removeItem("Data");
+    setData(null);
+    history.push("/");
+    }else{
+      alert("An error has occurred")
     }
   }
 
