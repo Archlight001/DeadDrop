@@ -11,6 +11,7 @@ export function useSocket() {
 export function SocketProvider({ children }) {
   const { data } = useMain();
   const [socket, setSocket] = useState();
+
   //console.log(data);
 
   useEffect(() => {
@@ -19,10 +20,6 @@ export function SocketProvider({ children }) {
       setSocket(socket);
 
       socket.emit("enter-chat", data);
-
-      socket.on("new-user", (user) => {
-        console.log(user);
-      });
 
       return () => socket.close();
     }

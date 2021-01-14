@@ -36,11 +36,12 @@ io.on("connection", async (socket) => {
     console.log(Session);
 
     if (Session) {
-      socket.join(Session.SessionID);
-      const user = addUser(UserId, SessionId, socket.id);
+      socket.join(`${Session.SessionID}`);
+      const user = addUser(UserId, SessionId, socket.id,Codename);
 
       if (user.id !== undefined) {
-        socket.broadcast.to(Session.SessionID).emit("new-user", user);
+        console.log("Broadcasting");
+        io.to(`${Session.SessionID}`).emit("new-user", `${Codename} has joined the group`);
       }
     }
 
@@ -55,7 +56,12 @@ io.on("connection", async (socket) => {
 
   socket.on("disconnect", () => {
     console.log("Disconnecting....");
-    console.log(removeUser(socket.id));
+    let user = removeUser(socket.id);
+    //console.log(`${user.codename} has been removed`);
+    if(user !== undefined){
+      io.to(`${user.session}`).emit("user-exit", `${user.codename} has left the group`);
+    }
+    
   });
 });
 

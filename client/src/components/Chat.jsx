@@ -3,15 +3,16 @@ import SendIcon from "@material-ui/icons/Send";
 import "../css/Chat.css";
 import { useHistory } from "react-router-dom";
 import { useMain } from "../contexts/MainProvider";
-import { useSocket } from "../contexts/SocketProvider";
 import Participants from "./Participants";
 import { apiCall } from "../utils/connect";
+import { useChat } from "../contexts/ChatProvider";
+import { useSocket } from "../contexts/SocketProvider";
 
 function Chat() {
   let history = useHistory();
   let { data, setData, isAdmin } = useMain();
-  let { socket } = useSocket();
-
+  let {chatLog } = useChat();
+  let {socket} = useSocket()
   let [participantsDisplayStatus, displayParticipants] = useState(false);
 
   let [participants, setParticipants] = useState([]);
@@ -22,7 +23,6 @@ function Chat() {
       let chatParticipants = await apiCall("post", "/api/getParticipants", {
         id: data.SessionId,
       });
-      console.log(chatParticipants);
       setParticipants(chatParticipants);
     }
 
@@ -31,8 +31,6 @@ function Chat() {
     }
   }, []);
 
-
-  //PARTICIPANT LIST NOT SHOWING UP
 
   async function endSession() {
     let UserId = data.UserId;
@@ -93,6 +91,14 @@ function Chat() {
     }
   }
 
+  let displayChats = chatLog.map((chat,index) =>{
+    if(chat.type === "announcement"){
+      return <h4 key={index}>{chat.content}</h4>
+    }else{
+      return <div key={index}></div>
+    }
+  })
+
   return (
     <div className="main__chat__container">
       <div className="chat__session__buttons">
@@ -118,6 +124,8 @@ function Chat() {
       <div className="chat__section">
         <div className="message__field">
           {/* <h4>Wolf has joined the chat</h4> */}
+          
+          {displayChats}
 
           {/* <div className="message__content__L">
             <p className="content__title">Wolf</p>

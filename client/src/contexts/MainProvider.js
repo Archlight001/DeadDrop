@@ -102,11 +102,9 @@ export function MainProvider({ children }) {
 
   useEffect(() => {
     async function checkAdmin() {
-      console.log(data.UserId);
       let checkUser = await apiCall("post", "/api/isAdmin", {
         id: data.UserId,
       });
-      console.log("Checkuser ", checkUser);
       setAdmin(checkUser.isAdmin);
     }
 
