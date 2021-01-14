@@ -23,12 +23,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api", sessionRoutes);
 
 io.on("connection", async (socket) => {
-  // if(Session.SessionID){
-  //   socket.join(SessionId)
-
-  //   socket.emit("creator-join",Session.UserId)
-  //   socket.broadcast.to(Session.SessionID).emit("announcement",)
-  // }
 
   socket.on("enter-chat", async (data) => {
     const SessionId = data.SessionId;
