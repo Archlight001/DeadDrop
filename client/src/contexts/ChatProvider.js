@@ -18,6 +18,11 @@ export default function ChatProvider({ children }) {
         addToChat(newArray);
       });
 
+      socket.on("new-message",(message)=>{
+          let newArray = [...chatLog,{...message}]
+          addToChat(newArray)
+      })
+
       socket.on("user-exit", (user) => {
         let newArray = [...chatLog, { type: "announcement", content: user }];
         addToChat(newArray);
@@ -25,6 +30,6 @@ export default function ChatProvider({ children }) {
     }
   }, [socket, chatLog]);
   return (
-    <ChatContext.Provider value={{ chatLog }}>{children}</ChatContext.Provider>
+    <ChatContext.Provider value={{ chatLog,addToChat }}>{children}</ChatContext.Provider>
   );
 }

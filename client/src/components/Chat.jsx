@@ -11,8 +11,8 @@ import { useSocket } from "../contexts/SocketProvider";
 function Chat() {
   let history = useHistory();
   let { data, setData, isAdmin } = useMain();
-  let {chatLog } = useChat();
-  let {socket} = useSocket()
+  let { chatLog, addToChat } = useChat();
+  let { socket } = useSocket();
   let [participantsDisplayStatus, displayParticipants] = useState(false);
 
   let [participants, setParticipants] = useState([]);
@@ -31,20 +31,20 @@ function Chat() {
     }
   }, []);
 
-
   async function endSession() {
     let UserId = data.UserId;
     let SessionID = data.SessionId;
     let deleteSession = await apiCall("post", "/api/deleteSession", {
-      UserId,SessionID
+      UserId,
+      SessionID,
     });
 
-    if(deleteSession.status === "success"){
-    localStorage.removeItem("Data");
-    setData(null);
-    history.push("/");
-    }else{
-      alert("An error has occurred")
+    if (deleteSession.status === "success") {
+      localStorage.removeItem("Data");
+      setData(null);
+      history.push("/");
+    } else {
+      alert("An error has occurred");
     }
   }
 
@@ -91,13 +91,50 @@ function Chat() {
     }
   }
 
-  let displayChats = chatLog.map((chat,index) =>{
-    if(chat.type === "announcement"){
-      return <h4 key={index}>{chat.content}</h4>
-    }else{
-      return <div key={index}></div>
+  let [messageInput, setMessageInput] = useState("");
+
+  function sendMessage(e) {
+    e.preventDefault();
+    let message = {
+      type: "message",
+      direction: "left",
+      User: data.Codename,
+      Message: messageInput,
+    };
+
+    let newArray = [...chatLog, message];
+    socket.emit("new-message",{...message,sessionId:data.SessionId})
+    addToChat(newArray);
+
+    setMessageInput("")
+  }
+
+  let displayChats = chatLog.map((chat, index) => {
+    if (chat.type === "announcement") {
+      return <h4 key={index}>{chat.content}</h4>;
+    } else if (chat.type === "message") {
+      if (chat.direction === "left") {
+        return (
+          <div key={index} className="message__content__L">
+            <p className="content__title">{chat.User}</p>
+            <p className="content__message">{chat.Message}</p>
+          </div>
+        );
+      } else {
+        return (
+          <div key={index} className="side__right">
+            <div className="message__content__R">
+              <div>
+                <p className="content__title">{chat.User}</p>
+              </div>
+              <p className="content__message">{chat.Message}</p>
+            </div>
+          </div>
+        );
+      }
     }
-  })
+    return <div key={index}></div>;
+  });
 
   return (
     <div className="main__chat__container">
@@ -124,7 +161,7 @@ function Chat() {
       <div className="chat__section">
         <div className="message__field">
           {/* <h4>Wolf has joined the chat</h4> */}
-          
+
           {displayChats}
 
           {/* <div className="message__content__L">
@@ -145,8 +182,12 @@ function Chat() {
         </div>
         <div className="input__container">
           <div>
-            <input type="text" name="" id="" />
-            <SendIcon />
+            <input
+              type="text"
+              onChange={(e) => setMessageInput(e.target.value)}
+              value={messageInput}
+            />
+            <SendIcon onClick={sendMessage} />
           </div>
         </div>
       </div>
