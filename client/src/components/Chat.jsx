@@ -26,6 +26,8 @@ function Chat() {
       setParticipants(chatParticipants);
     }
 
+    console.log("Data is ", data);
+
     if (data !== null) {
       getParticipantsData();
     }
@@ -103,10 +105,17 @@ function Chat() {
     };
 
     let newArray = [...chatLog, message];
-    socket.emit("new-message",{...message,sessionId:data.SessionId})
+    socket.emit("new-message", { ...message, sessionId: data.SessionId });
     addToChat(newArray);
 
-    setMessageInput("")
+    setMessageInput("");
+  }
+
+  function onEnterPress(e) {
+    console.log(e);
+    if (["Enter"].includes(e.key)) {
+      sendMessage(e);
+    }
   }
 
   let displayChats = chatLog.map((chat, index) => {
@@ -180,16 +189,18 @@ function Chat() {
             </div>
           </div> */}
         </div>
-        <div className="input__container">
-          <div>
-            <input
-              type="text"
-              onChange={(e) => setMessageInput(e.target.value)}
-              value={messageInput}
-            />
-            <SendIcon onClick={sendMessage} />
+        <form onKeyDown={onEnterPress} onSubmit={(e) => e.preventDefault()}>
+          <div className="input__container">
+            <div>
+              <input
+                type="text"
+                onChange={(e) => setMessageInput(e.target.value)}
+                value={messageInput}
+              />
+              <SendIcon onClick={sendMessage} />
+            </div>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   );

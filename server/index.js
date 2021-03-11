@@ -34,6 +34,8 @@ io.on("connection", async (socket) => {
 
     console.log(Session);
 
+    //Changing Codenames when sending messages
+
     if (Session) {
       socket.join(`${Session.SessionID}`);
       const user = addUser(UserId, SessionId, socket.id, Codename);
