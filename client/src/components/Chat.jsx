@@ -108,11 +108,12 @@ function Chat() {
     socket.emit("new-message", { ...message, sessionId: data.SessionId });
     addToChat(newArray);
 
+    scrollField();
+
     setMessageInput("");
   }
 
   function onEnterPress(e) {
-    console.log(e);
     if (["Enter"].includes(e.key)) {
       sendMessage(e);
     }
@@ -144,6 +145,12 @@ function Chat() {
     }
     return <div key={index}></div>;
   });
+
+  //Make message field always scroll to the bottom
+  function scrollField(){
+    var element = document.getElementsByClassName("message__field")
+    element[0].scrollTop = element[0].scrollHeight;
+  }
 
   return (
     <div className="main__chat__container">
