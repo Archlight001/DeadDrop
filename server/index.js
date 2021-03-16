@@ -4,11 +4,14 @@ const app = express();
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const server = http.createServer(app);
+const dotenv = require("dotenv");
 const { findSession } = require("./helpers/dbOps");
 
 const { addUser, getAllUsers, removeUser } = require("./helpers/users");
 
 const sessionRoutes = require("./routes/session");
+
+dotenv.config();
 
 const io = require("socket.io")(server, {
   cors: {

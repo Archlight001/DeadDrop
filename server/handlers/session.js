@@ -1,8 +1,33 @@
 const db = require("../models/index");
+const nodemailer = require("nodemailer");
 const {
   generateCodeName,
   generateCodeNameP,
 } = require("../helpers/codenameGen");
+
+const dotenv = require("dotenv");
+dotenv.config();
+
+// let transport = nodemailer.createTransport({
+//   host: "smtp.mailtrap.io",
+//   port: 2525,
+//   auth: {
+//     user: "",
+//     pass: "",
+//   },
+// });
+
+let transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    type: "OAuth2",
+    user: process.env.MAIL_USERNAME,
+    pass: process.env.MAIL_PASSWORD,
+    clientId: process.env.OAUTH_CLIENTID,
+    clientSecret: process.env.OAUTH_CLIENT_SECRET,
+    refreshToken: process.env.OAUTH_REFRESH_TOKEN,
+  },
+});
 
 exports.createSession = async function (req, res, next) {
   const SessionID = req.body.SessionId;
@@ -122,6 +147,23 @@ exports.addParticipant = async function addParticipant(req, res, next) {
       let save = await addParticipant[0].save();
       if (save.SessionID !== undefined) {
         let Participants = generateParticipants(save);
+
+
+        //Send mail to invite participant
+        let mailOptions = {
+          from: "christopherenok@gmail.com",
+          to: email,
+          subject: "DeadDrop Session Invite",
+          html: `<h1>You have been invited to a dead drop session</h1> <p><strong>Session ID</strong>:${session}</p><p><strong>Your ID</strong>:${id}</p>`,
+        };
+
+        transporter.sendMail(mailOptions, function (err, data) {
+          if (err) {
+            console.log("Error " + err);
+          } else {
+            console.log("Email sent successfully");
+          }
+        });
         return res.status(200).json({ Participants, status: true });
       } else {
         return res.status(500).json({ status: false });
