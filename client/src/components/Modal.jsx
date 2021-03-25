@@ -22,6 +22,7 @@ export default function Modal({
       onClose={() => {
         showModal(false);
       }}
+      customStyles={{backgroundColor: '#c9d1da'}}
       width={400}
       height={220}
       showCloseButton={true}
