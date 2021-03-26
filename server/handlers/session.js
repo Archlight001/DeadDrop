@@ -148,7 +148,6 @@ exports.addParticipant = async function addParticipant(req, res, next) {
       if (save.SessionID !== undefined) {
         let Participants = generateParticipants(save);
 
-
         //Send mail to invite participant
         let mailOptions = {
           from: "christopherenok@gmail.com",
@@ -157,13 +156,11 @@ exports.addParticipant = async function addParticipant(req, res, next) {
           html: `<h1>You have been invited to a dead drop session</h1> <p><strong>Session ID</strong>:${session}</p><p><strong>Your ID</strong>:${id}</p>`,
         };
 
-        transporter.sendMail(mailOptions, function (err, data) {
-          if (err) {
-            console.log("Error " + err);
-          } else {
-            console.log("Email sent successfully");
-          }
-        });
+        let isSent = await sendMail(mailOptions);
+
+        console.log("isSent is ", isSent);
+        if (!isSent) return res.status(200).json({ status: false });
+
         return res.status(200).json({ Participants, status: true });
       } else {
         return res.status(500).json({ status: false });
@@ -173,6 +170,24 @@ exports.addParticipant = async function addParticipant(req, res, next) {
 
   return res.status(500).json({ status: false });
 };
+
+async function sendMail(mailOptions) {
+  return new Promise((resolve, reject) => {
+    transporter.sendMail(mailOptions, function (err, data) {
+      if (err) {
+        //Find and remove last added participant
+        // let findParticipant = await db.Session.find({ SessionID: session });
+        // findParticipant[0].Participants.pop();
+        // let saver = await findParticipant[0].save();
+        console.log("Error", err);
+        reject(false);
+      } else {
+        console.log("returning true");
+        resolve(true);
+      }
+    });
+  });
+}
 
 exports.deleteParticipant = async function deleteParticipant(req, res, next) {
   try {

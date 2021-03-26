@@ -32,6 +32,7 @@ export default function Participants({
       session: SessionId,
       id: UserId,
     });
+
     if (addParticipant.status) {
       alert("Added Successfully");
       console.log(addParticipant);
@@ -101,31 +102,6 @@ export default function Participants({
       customStyles={{ backgroundColor: "#232b2b" }}
     >
       <div className="participants__list__container">
-        {/* <div className="participants__list__item">
-          <div className="list__name">
-            <div>
-              <p>Codename</p>
-              <p className="participant__email">name@email.com</p>
-            </div>
-
-            <EditIcon />
-            <CancelIcon />
-          </div>
-
-          <div>
-            <img
-              src={GreenIcon}
-              className="icon__indicator"
-              alt="Online Icon"
-            />
-            <img
-              src={GrayIcon}
-              className="icon__indicator__gray"
-              alt="Offline Icon"
-            />
-          </div>
-        </div> */}
-
         {participantList}
       </div>
 

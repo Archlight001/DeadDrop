@@ -6,6 +6,11 @@
 
 /* Chat Session buttons */
 
+.overflow-scrolling {
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 .chat__session__buttons {
   display: flex;
   justify-content: flex-end;

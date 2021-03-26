@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import SendIcon from "@material-ui/icons/Send";
 import "../css/Chat.css";
 import { useHistory } from "react-router-dom";
@@ -8,17 +8,31 @@ import { apiCall } from "../utils/connect";
 import { useChat } from "../contexts/ChatProvider";
 import { useSocket } from "../contexts/SocketProvider";
 
+
+
 function Chat() {
   let history = useHistory();
   let { data, setData, isAdmin } = useMain();
   let { chatLog, addToChat } = useChat();
-  let { socket } = useSocket();
-  let [participantsDisplayStatus, displayParticipants] = useState(false);
 
+  let { socket } = useSocket();
+
+  const messageField = useRef();
+
+  const scrollToBottom = () => {
+    messageField.current.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+      inline: "center",
+    });
+  };
+
+  let [participantsDisplayStatus, displayParticipants] = useState(false);
+  let [messageInput, setMessageInput] = useState("");
   let [participants, setParticipants] = useState([]);
   let [onlineParticipants, setOnlineParticipants] = useState([]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     async function getParticipantsData() {
       let chatParticipants = await apiCall("post", "/api/getParticipants", {
         id: data.SessionId,
@@ -28,10 +42,15 @@ function Chat() {
 
     console.log("Data is ", data);
 
-    if (data !== null) {
+    if (data !== null && participants.length < 1) {
       getParticipantsData();
     }
-  }, []);
+
+    if (messageField.current) {
+      console.log("Scrolling");
+      scrollToBottom();
+    }
+  });
 
   async function endSession() {
     let UserId = data.UserId;
@@ -93,8 +112,6 @@ function Chat() {
     }
   }
 
-  let [messageInput, setMessageInput] = useState("");
-
   function sendMessage(e) {
     e.preventDefault();
     let message = {
@@ -108,8 +125,7 @@ function Chat() {
     socket.emit("new-message", { ...message, sessionId: data.SessionId });
     addToChat(newArray);
 
-    scrollField();
-
+    //scrollField();
     setMessageInput("");
   }
 
@@ -125,7 +141,7 @@ function Chat() {
     } else if (chat.type === "message") {
       if (chat.direction === "left") {
         return (
-          <div key={index} className="message__content__L">
+          <div ref={index === chatLog.length-1 ? messageField:React.createRef()} key={index} className="message__content__L">
             <p className="content__title">{chat.User}</p>
             <p className="content__message">{chat.Message}</p>
           </div>
@@ -146,9 +162,10 @@ function Chat() {
     return <div key={index}></div>;
   });
 
+  console.log(displayChats);
   //Make message field always scroll to the bottom
-  function scrollField(){
-    var element = document.getElementsByClassName("message__field")
+  function scrollField() {
+    var element = document.getElementsByClassName("message__field");
     element[0].scrollTop = element[0].scrollHeight;
   }
 
@@ -176,25 +193,9 @@ function Chat() {
 
       <div className="chat__section">
         <div className="message__field">
-          {/* <h4>Wolf has joined the chat</h4> */}
 
           {displayChats}
-
-          {/* <div className="message__content__L">
-            <p className="content__title">Wolf</p>
-            <p className="content__message">
-              Hi, I hope you've got the package for me
-            </p>
-          </div> */}
-
-          {/* <div className="side__right">
-            <div className="message__content__R">
-              <div>
-                <p className="content__title">Lion</p>
-              </div>
-              <p className="content__message">Right here, come get it</p>
-            </div>
-          </div> */}
+          
         </div>
         <form onKeyDown={onEnterPress} onSubmit={(e) => e.preventDefault()}>
           <div className="input__container">
