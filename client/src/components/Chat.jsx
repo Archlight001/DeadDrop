@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import SendIcon from "@material-ui/icons/Send";
 import "../css/Chat.css";
 import { useHistory } from "react-router-dom";
@@ -7,8 +7,7 @@ import Participants from "./Participants";
 import { apiCall } from "../utils/connect";
 import { useChat } from "../contexts/ChatProvider";
 import { useSocket } from "../contexts/SocketProvider";
-
-
+import Timer from "./Timer";
 
 function Chat() {
   let history = useHistory();
@@ -137,18 +136,37 @@ function Chat() {
 
   let displayChats = chatLog.map((chat, index) => {
     if (chat.type === "announcement") {
-      return <h4 key={index}>{chat.content}</h4>;
+      return (
+        <h4
+          ref={index === chatLog.length - 1 ? messageField : React.createRef()}
+          key={index}
+        >
+          {chat.content}
+        </h4>
+      );
     } else if (chat.type === "message") {
       if (chat.direction === "left") {
         return (
-          <div ref={index === chatLog.length-1 ? messageField:React.createRef()} key={index} className="message__content__L">
+          <div
+            ref={
+              index === chatLog.length - 1 ? messageField : React.createRef()
+            }
+            key={index}
+            className="message__content__L"
+          >
             <p className="content__title">{chat.User}</p>
             <p className="content__message">{chat.Message}</p>
           </div>
         );
       } else {
         return (
-          <div key={index} className="side__right">
+          <div
+            ref={
+              index === chatLog.length - 1 ? messageField : React.createRef()
+            }
+            key={index}
+            className="side__right"
+          >
             <div className="message__content__R">
               <div>
                 <p className="content__title">{chat.User}</p>
@@ -162,18 +180,16 @@ function Chat() {
     return <div key={index}></div>;
   });
 
-  console.log(displayChats);
-  //Make message field always scroll to the bottom
-  function scrollField() {
-    var element = document.getElementsByClassName("message__field");
-    element[0].scrollTop = element[0].scrollHeight;
-  }
-
+  console.log(data.date);
   return (
     <div className="main__chat__container">
-      <div className="chat__session__buttons">
-        <button onClick={showParticipants}>Participants</button>
-        <button onClick={endSession}>End Session</button>
+      <div className="chat__heading">
+        <Timer sessionTime={data.date} />
+
+        <div className="chat__session__buttons">
+          <button onClick={showParticipants}>Participants</button>
+          <button onClick={endSession}>End Session</button>
+        </div>
       </div>
 
       {participantsDisplayStatus && (
@@ -192,11 +208,7 @@ function Chat() {
       )}
 
       <div className="chat__section">
-        <div className="message__field">
-
-          {displayChats}
-          
-        </div>
+        <div className="message__field">{displayChats}</div>
         <form onKeyDown={onEnterPress} onSubmit={(e) => e.preventDefault()}>
           <div className="input__container">
             <div>

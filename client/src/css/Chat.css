@@ -1,15 +1,27 @@
+
+
 .main__chat__container {
   background-color: #232b2b;
-  height: 100vh;
   width: 100vw;
 }
 
-/* Chat Session buttons */
 
-.overflow-scrolling {
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
+/* Chat Heading and Timer */
+.chat__heading{
+  display: flex;
+  justify-content: space-between;
 }
+
+.chat__timer{
+  color: red;
+  font-family: "M PLUS Rounded 1c", sans-serif;
+  font-weight: bolder;
+  font-size: large;
+  margin-left: 0.8em;
+  margin-top: 0.1em;
+}
+
+/* Chat Session buttons */
 
 .chat__session__buttons {
   display: flex;
