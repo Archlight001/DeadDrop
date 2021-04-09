@@ -1,148 +1,186 @@
-html{
-  background-color: #232b2b;
+html {
+	background-color: #232b2b;
 }
 
 .homepage {
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background-color: #9ba1a8;
-  color: #ffffff;
+	width: 100vw;
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	background-color: #9ba1a8;
+	color: #ffffff;
 }
 
 .section__buttons {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 20px;
-  margin-right: 30px;
+	display: flex;
+	justify-content: flex-end;
+	margin-top: 20px;
+	margin-right: 30px;
 }
 
 .section__buttons button {
-  background-color: #9367a3;
-  border: 0;
-  border-radius: 10%;
-  font-size: medium;
-  color: #ffffff;
-  font-family: "Ruluko", sans-serif;
-  margin-right: 30px;
+	background-color: #9367a3;
+	border: 0;
+	border-radius: 10%;
+	font-size: medium;
+	color: #ffffff;
+	font-family: "Ruluko", sans-serif;
+	margin-right: 30px;
 }
 
 .section__buttons button:focus {
-  outline-offset: 0px !important;
-  outline: none !important;
+	outline-offset: 0px !important;
+	outline: none !important;
 }
 
 .section__buttons button:hover {
-  cursor: pointer;
-  background-color: #62197c;
+	cursor: pointer;
+	background-color: #62197c;
 }
 
 .section__body {
-  display: flex;
-  justify-content: space-between;
-  padding: 5%;
-  margin-top: 5%;
+	display: flex;
+	justify-content: space-between;
+	padding: 5%;
+	margin-top: 5%;
 }
 
 .section__body__title {
-  margin-left: 12%;
-  text-align: center;
+	margin-left: 12%;
+	text-align: center;
 }
 
 .section__body__title h1 {
-  font-family: "M PLUS Rounded 1c", sans-serif;
-  font-size: 3.8rem;
-  margin-bottom: 0px;
+	font-family: "M PLUS Rounded 1c", sans-serif;
+	font-size: 3.8rem;
+	margin-bottom: 0px;
 }
 
 .section__body p {
-  font-family: "Ruluko", sans-serif;
-  font-size: large;
+	font-family: "Ruluko", sans-serif;
+	font-size: large;
 }
 
 .section__body__image {
-  display: flex;
-  width: 100%;
-  animation: fadeIn ease 1s;
+	display: flex;
+	width: 100%;
+	animation: fadeIn ease 1s;
 }
 
 @keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
 }
 .section__body__image img {
-  margin: 0 auto;
-  height: 13em;
-  width: 13em;
+	margin: 0 auto;
+	height: 13em;
+	width: 13em;
 }
 
 .codename__modal {
-  margin-top: 2em;
-  padding: 1em;
-  display: flex;
-  flex-direction: column;
+	margin-top: 2em;
+	padding: 1em;
+	display: flex;
+	flex-direction: column;
 }
 
 .codename__modal input {
-  margin-bottom: 1em;
-  height: 2.5em;
-  font-family: "Ruluko", sans-serif;
-  font-size: medium;
-  text-align: center;
+	margin-bottom: 1em;
+	height: 2.5em;
+	font-family: "Ruluko", sans-serif;
+	font-size: medium;
+	text-align: center;
 }
 
 .codename__modal input:focus {
-  outline-offset: 0px !important;
-  outline: none !important;
+	outline-offset: 0px !important;
+	outline: none !important;
 }
 
 .codename__modal button {
-  width: 50%;
-  height: 2.5em;
-  font-size: large;
-  margin: 0 auto;
+	width: 50%;
+	height: 2.5em;
+	font-size: large;
+	margin: 0 auto;
 }
 
 .create__session__button {
-  background: #3d94f6;
-  background-image: -webkit-linear-gradient(top, #3d94f6, #1e62d0);
-  background-image: -moz-linear-gradient(top, #3d94f6, #1e62d0);
-  background-image: -ms-linear-gradient(top, #3d94f6, #1e62d0);
-  background-image: -o-linear-gradient(top, #3d94f6, #1e62d0);
-  background-image: -webkit-gradient(to bottom, #3d94f6, #1e62d0);
-  -webkit-border-radius: 20px;
-  -moz-border-radius: 20px;
-  border-radius: 20px;
-  height: 50px;
-  color: #ffffff;
-  font-family: "Ruluko", sans-serif;
-  width: 200px;
-  font-size: 39px;
-  font-weight: 100;
-  padding: 12px;
-  text-shadow: 1px 1px 20px #000000;
-  border: solid #337fed 1px;
-  text-decoration: none;
-  display: inline-block;
-  cursor: pointer;
-  text-align: center;
+	background: #3d94f6;
+	background-image: -webkit-linear-gradient(top, #3d94f6, #1e62d0);
+	background-image: -moz-linear-gradient(top, #3d94f6, #1e62d0);
+	background-image: -ms-linear-gradient(top, #3d94f6, #1e62d0);
+	background-image: -o-linear-gradient(top, #3d94f6, #1e62d0);
+	background-image: -webkit-gradient(to bottom, #3d94f6, #1e62d0);
+	-webkit-border-radius: 20px;
+	-moz-border-radius: 20px;
+	border-radius: 20px;
+	height: 50px;
+	color: #ffffff;
+	font-family: "Ruluko", sans-serif;
+	width: 200px;
+	font-size: 39px;
+	font-weight: 100;
+	padding: 12px;
+	text-shadow: 1px 1px 20px #000000;
+	border: solid #337fed 1px;
+	text-decoration: none;
+	display: inline-block;
+	cursor: pointer;
+	text-align: center;
 }
 
 .create__session__button:hover {
-  border: solid #337fed 1px;
-  background: #1e62d0;
-  background-image: -webkit-linear-gradient(top, #1e62d0, #3d94f6);
-  background-image: -moz-linear-gradient(top, #1e62d0, #3d94f6);
-  background-image: -ms-linear-gradient(top, #1e62d0, #3d94f6);
-  background-image: -o-linear-gradient(top, #1e62d0, #3d94f6);
-  background-image: -webkit-gradient(to bottom, #1e62d0, #3d94f6);
-  -webkit-border-radius: 20px;
-  -moz-border-radius: 20px;
-  border-radius: 20px;
-  text-decoration: none;
+	border: solid #337fed 1px;
+	background: #1e62d0;
+	background-image: -webkit-linear-gradient(top, #1e62d0, #3d94f6);
+	background-image: -moz-linear-gradient(top, #1e62d0, #3d94f6);
+	background-image: -ms-linear-gradient(top, #1e62d0, #3d94f6);
+	background-image: -o-linear-gradient(top, #1e62d0, #3d94f6);
+	background-image: -webkit-gradient(to bottom, #1e62d0, #3d94f6);
+	-webkit-border-radius: 20px;
+	-moz-border-radius: 20px;
+	border-radius: 20px;
+	text-decoration: none;
+}
+
+/* Media Queries for Homepage */
+
+@media screen and (max-width: 600px) {
+	.section__buttons {
+		margin-top: 10px;
+		margin-right: 5px;
+	}
+
+	.section__buttons button {
+		font-size: small;
+		margin-right: 10px;
+	}
+	.section__body {
+		padding: 5%;
+		margin-top: 5%;
+	}
+
+	.section__body__title {
+		margin-left: 10%;
+	}
+
+	.section__body__title h1 {
+		font-size: 1.4rem;
+	}
+
+	.section__body p {
+		font-size: small;
+	}
+
+	.section__body__image img {
+		height: 8em;
+		width: 8em;
+	}
+	.codename__modal {
+		width: 90%;
+	}
 }
