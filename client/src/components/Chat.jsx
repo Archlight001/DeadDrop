@@ -92,20 +92,22 @@ function Chat() {
 
 	async function editCodename(UserId) {
 		var newCodename = prompt("Enter your new Codename");
-		if (newCodename.trim() !== "") {
-			var con = window.confirm(`Changing codename to ${newCodename} ?`);
-			if (con) {
-				var SessionID = data.SessionId;
-				var editOperation = await apiCall("post", "/api/editCodename", {
-					SessionID,
-					UserId,
-					newCodename,
-				});
-				if (editOperation.status === "success") {
-					let newData = { ...data, Codename: editOperation.newCodename };
-					localStorage.setItem("Data", JSON.stringify(newData));
-					setData(newData);
-					setParticipants(editOperation.Participants);
+		if (newCodename !== null) {
+			if (newCodename.trim() !== "") {
+				var con = window.confirm(`Changing codename to ${newCodename} ?`);
+				if (con) {
+					var SessionID = data.SessionId;
+					var editOperation = await apiCall("post", "/api/editCodename", {
+						SessionID,
+						UserId,
+						newCodename,
+					});
+					if (editOperation.status === "success") {
+						let newData = { ...data, Codename: editOperation.newCodename };
+						localStorage.setItem("Data", JSON.stringify(newData));
+						setData(newData);
+						setParticipants(editOperation.Participants);
+					}
 				}
 			}
 		}
